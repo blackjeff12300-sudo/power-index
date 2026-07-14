@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Engite Power Index</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      padding: 20px;
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top, #1f3a5f 0%, #0f172a 45%, #070b14 100%);
+      color: #ffffff;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    .brand {
+      text-align: center;
+      margin: 18px 0 22px;
+    }
+
+    .brand-icon {
+      font-size: 42px;
+      margin-bottom: 6px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.15;
+    }
+
+    .brand-short {
+      color: #60a5fa;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-top: 5px;
+    }
+
+    .subtitle {
+      margin-top: 10px;
+      color: #cbd5e1;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.13);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+      backdrop-filter: blur(12px);
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 7px;
+      font-weight: bold;
+      color: #e2e8f0;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid transparent;
+      border-radius: 13px;
+      background: #ffffff;
+      color: #111827;
+      font-size: 17px;
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .calculate-btn {
+      margin-top: 22px;
+      background: linear-gradient(135deg, #2563eb, #22c55e);
+      color: #ffffff;
+    }
+
+    .calculate-btn:active,
+    .share-btn:active {
+      transform: scale(0.98);
+    }
+
+    .result-card {
+      display: none;
+    }
+
+    .result-label {
+      text-align: center;
+      color: #cbd5e1;
+      font-size: 14px;
+    }
+
+    .score {
+      text-align: center;
+      font-size: 58px;
+      font-weight: 800;
+      margin: 5px 0;
+      color: #4ade80;
+    }
+
+    .profile-line {
+      text-align: center;
+      color: #cbd5e1;
+      margin-bottom: 20px;
+    }
+
+    .power-level {
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 8px 0 20px;
+    }
+
+    .meter-wrapper {
+      margin-top: 10px;
+    }
+
+    .meter {
+      position: relative;
+      height: 16px;
+      border-radius: 999px;
+      overflow: hidden;
+      background:
+        linear-gradient(
+          90deg,
+          #64748b 0%,
+          #f59e0b 28%,
+          #22c55e 50%,
+          #3b82f6 74%,
+          #a855f7 100%
+        );
+    }
+
+    .marker {
+      position: absolute;
+      top: -5px;
+      width: 4px;
+      height: 26px;
+      border-radius: 999px;
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+      transform: translateX(-50%);
+    }
+
+    .meter-scale {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      color: #94a3b8;
+      font-size: 11px;
+    }
+
+    .comparison-title {
+      margin-top: 24px;
+      margin-bottom: 12px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .comparison-box {
+      padding: 15px;
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.07);
+      margin-bottom: 11px;
+    }
+
+    .comparison-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .comparison-name {
+      font-weight: bold;
+    }
+
+    .comparison-score {
+      color: #93c5fd;
+      font-weight: bold;
+    }
+
+    .comparison-text {
+      margin-top: 7px;
+      color: #cbd5e1;
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .share-btn {
+      margin-top: 16px;
+      background: #25d366;
+      color: #ffffff;
+    }
+
+    .formula {
+      font-size: 13px;
+      line-height: 1.75;
+      color: #cbd5e1;
+    }
+
+    .formula strong {
+      color: #ffffff;
+    }
+
+    .disclaimer {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 12px;
+      line-height: 1.65;
+      padding: 3px 8px 24px;
+    }
+
+    .small-note {
+      color: #94a3b8;
+      font-size: 12px;
+      margin-top: 8px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="page">
+    <header class="brand">
+      <div class="brand-icon">🏓</div>
+
+      <h1>Engite Power Index</h1>
+
+      <div class="brand-short">EPI</div>
+
+      <div class="subtitle">
+        Estimate your theoretical striking power based on body size and sex.
+      </div>
+    </header>
+
+    <section class="card">
+      <label for="weight">Body Weight (kg)</label>
+      <input
+        type="number"
+        id="weight"
+        placeholder="Example: 70"
+        min="20"
+        max="250"
+        step="0.1"
+        inputmode="decimal"
+      />
+
+      <label for="height">Height (cm)</label>
+      <input
+        type="number"
+        id="height"
+        placeholder="Example: 170"
+        min="100"
+        max="230"
+        step="0.1"
+        inputmode="decimal"
+      />
+
+      <label for="gender">Sex</label>
+      <select id="gender">
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+      <button class="calculate-btn" onclick="calculateEPI()">
+        Calculate My EPI
+      </button>
+
+      <div class="small-note">
+        This model does not include technique, training, paddle type, timing,
+        coordination, age or body-fat percentage.
+      </div>
+    </section>
+
+    <section class="card result-card" id="resultCard">
+      <div class="result-label">Your Engite Power Index</div>
+
+      <div class="score" id="score">0.0</div>
+
+      <div class="profile-line" id="profileLine"></div>
+
+      <div class="power-level" id="powerLevel"></div>
+
+      <div class="meter-wrapper">
+        <div class="meter">
+          <div class="marker" id="marker"></div>
+        </div>
+
+        <div class="meter-scale">
+          <span>Very Light</span>
+          <span>Average</span>
+          <span>Strong</span>
+          <span>Elite</span>
+        </div>
+      </div>
+
+      <div class="comparison-title">
+        Estimated Adult Reference Comparison
+      </div>
+
+      <div class="comparison-box">
+        <div class="comparison-header">
+          <span class="comparison-name">Male Reference Average</span>
+          <span class="comparison-score">17.2 EPI</span>
+        </div>
+
+        <div class="comparison-text" id="maleComparison"></div>
+      </div>
+
+      <div class="comparison-box">
+        <div class="comparison-header">
+          <span class="comparison-name">Female Reference Average</span>
+          <span class="comparison-score">10.2 EPI</span>
+        </div>
+
+        <div class="comparison-text" id="femaleComparison"></div>
+      </div>
+
+      <button class="share-btn" onclick="shareWhatsApp()">
+        Share My EPI on WhatsApp
+      </button>
+    </section>
+
+    <section class="card formula">
+      <strong>EPI Formula</strong>
+      <br /><br />
+
+      EPI = Weight<sup>0.67</sup>
+      × (Height ÷ 170)<sup>0.5</sup>
+      × Sex Factor
+
+      <br /><br />
+
+      Male factor: 1.00
+      <br />
+
+      Female factor: 0.65
+      <br /><br />
+
+      <strong>Reference averages used by this calculator</strong>
+      <br />
+
+      Male reference: 17.2 EPI
+      <br />
+
+      Female reference: 10.2 EPI
+    </section>
+
+    <footer class="disclaimer">
+      EPI is an independently developed reference model for educational,
+      discussion and entertainment purposes. It is not an official scientific,
+      medical or athletic measurement and does not directly predict actual ball
+      speed or competitive performance.
+    </footer>
+  </main>
+
+  <script>
+    const MALE_REFERENCE = 17.2;
+    const FEMALE_REFERENCE = 10.2;
+
+    let currentScore = 0;
+    let currentWeight = 0;
+    let currentHeight = 0;
+    let currentSex = "";
+
+    function calculateEPI() {
+      const weight = Number(document.getElementById("weight").value);
+      const height = Number(document.getElementById("height").value);
+      const sex = document.getElementById("gender").value;
+
+      if (
+        !Number.isFinite(weight) ||
+        !Number.isFinite(height) ||
+        weight < 20 ||
+        weight > 250 ||
+        height < 100 ||
+        height > 230
+      ) {
+        alert("Please enter a valid weight and height.");
+        return;
+      }
+
+      const sexFactor = sex === "male" ? 1.0 : 0.65;
+
+      const epi =
+        Math.pow(weight, 0.67) *
+        Math.pow(height / 170, 0.5) *
+        sexFactor;
+
+      currentScore = Number(epi.toFixed(1));
+      currentWeight = weight;
+      currentHeight = height;
+      currentSex = sex === "male" ? "Male" : "Female";
+
+      document.getElementById("score").textContent =
+        currentScore.toFixed(1);
+
+      document.getElementById("profileLine").textContent =
+        `${currentSex} · ${currentHeight} cm · ${currentWeight} kg`;
+
+      document.getElementById("powerLevel").textContent =
+        getPowerLevel(currentScore);
+
+      document.getElementById("maleComparison").textContent =
+        buildComparison(currentScore, MALE_REFERENCE, "male reference average");
+
+      document.getElementById("femaleComparison").textContent =
+        buildComparison(
+          currentScore,
+          FEMALE_REFERENCE,
+          "female reference average"
+        );
+
+      updateMarker(currentScore);
+
+      const resultCard = document.getElementById("resultCard");
+      resultCard.style.display = "block";
+
+      resultCard.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    function getPowerLevel(score) {
+      if (score < 10) {
+        return "Power Level: Very Light";
+      }
+
+      if (score < 13) {
+        return "Power Level: Light";
+      }
+
+      if (score < 16) {
+        return "Power Level: Average";
+      }
+
+      if (score < 19) {
+        return "Power Level: Strong";
+      }
+
+      if (score < 22) {
+        return "Power Level: Very Strong";
+      }
+
+      return "Power Level: Elite";
+    }
+
+    function buildComparison(score, reference, label) {
+      const difference = ((score - reference) / reference) * 100;
+      const roundedDifference = Math.abs(difference).toFixed(1);
+
+      if (Math.abs(difference) < 0.5) {
+        return `Your EPI is approximately equal to the estimated ${label}.`;
+      }
+
+      if (difference > 0) {
+        return `Your EPI is ${roundedDifference}% above the estimated ${label}.`;
+      }
+
+      return `Your EPI is ${roundedDifference}% below the estimated ${label}.`;
+    }
+
+    function updateMarker(score) {
+      const minimum = 6;
+      const maximum = 24;
+
+      const limitedScore = Math.min(Math.max(score, minimum), maximum);
+
+      const position =
+        ((limitedScore - minimum) / (maximum - minimum)) * 100;
+
+      document.getElementById("marker").style.left = `${position}%`;
+    }
+
+    function shareWhatsApp() {
+      const maleText = buildComparison(
+        currentScore,
+        MALE_REFERENCE,
+        "male reference average"
+      );
+
+      const femaleText = buildComparison(
+        currentScore,
+        FEMALE_REFERENCE,
+        "female reference average"
+      );
+
+      const level = getPowerLevel(currentScore).replace(
+        "Power Level: ",
+        ""
+      );
+
+      const message =
+        `🏓 My Engite Power Index (EPI)%0A%0A` +
+        `EPI: ${currentScore.toFixed(1)}%0A` +
+        `Power Level: ${level}%0A` +
+        `Sex: ${currentSex}%0A` +
+        `Height: ${currentHeight} cm%0A` +
+        `Weight: ${currentWeight} kg%0A%0A` +
+        `${maleText}%0A` +
+        `${femaleText}%0A%0A` +
+        `Calculate yours here:%0A${encodeURIComponent(window.location.href)}`;
+
+      window.open(`https://wa.me/?text=${message}`, "_blank");
+    }
+  </script>
+</body>
+</html>
